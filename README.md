@@ -32,6 +32,12 @@ corral run -- ponyc -Dopenssl_0.9.0
 corral run -- ponyc -Dopenssl_1.1.x
 ```
 
+### Using OpenSSL 3.x
+
+```bash
+corral run -- ponyc -Dopenssl3
+```
+
 ## Dependencies
 
 `net_ssl` requires either LibreSSL or OpenSSL in order to operate. You'll might need to install it within your environment of choice.
