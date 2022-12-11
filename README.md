@@ -35,7 +35,7 @@ corral run -- ponyc -Dopenssl_1.1.x
 ### Using OpenSSL 3.x
 
 ```bash
-corral run -- ponyc -Dopenssl3
+corral run -- ponyc -Dopenssl_3
 ```
 
 ## Dependencies

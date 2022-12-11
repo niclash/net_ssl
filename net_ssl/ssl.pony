@@ -15,7 +15,7 @@ use @SSL_set_accept_state[None](ssl: Pointer[_SSL])
 use @SSL_set_connect_state[None](ssl: Pointer[_SSL])
 use @SSL_do_handshake[I32](ssl: Pointer[_SSL])
 use @SSL_get0_alpn_selected[None](ssl: Pointer[_SSL] tag, data: Pointer[Pointer[U8] iso],
-  len: Pointer[U32]) if "openssl_1.1.x" or "openssl3"
+  len: Pointer[U32]) if "openssl_1.1.x" or "openssl_3"
 use @SSL_pending[I32](ssl: Pointer[_SSL])
 use @SSL_read[I32](ssl: Pointer[_SSL], buf: Pointer[U8] tag, len: U32)
 use @SSL_write[I32](ssl: Pointer[_SSL], buf: Pointer[U8] tag, len: U32)
@@ -23,9 +23,9 @@ use @BIO_read[I32](bio: Pointer[_BIO] tag, buf: Pointer[U8] tag, len: U32)
 use @BIO_write[I32](bio: Pointer[_BIO] tag, buf: Pointer[U8] tag, len: U32)
 use @SSL_get_error[I32](ssl: Pointer[_SSL], ret: I32)
 use @BIO_ctrl_pending[USize](bio: Pointer[_BIO] tag)
-use @SSL_has_pending[I32](ssl: Pointer[_SSL]) if "openssl_1.1.x" or "openssl3"
+use @SSL_has_pending[I32](ssl: Pointer[_SSL]) if "openssl_1.1.x" or "openssl_3"
 use @SSL_get_peer_certificate[Pointer[X509]](ssl: Pointer[_SSL]) if "openssl_1.1.x"
-use @SSL_get1_peer_certificate[Pointer[X509]](ssl: Pointer[_SSL]) if "openssl3"
+use @SSL_get1_peer_certificate[Pointer[X509]](ssl: Pointer[_SSL]) if "openssl_3"
 
 primitive _SSL
 primitive _BIO
@@ -98,7 +98,7 @@ class SSL
     """
     var ptr: Pointer[U8] iso = recover Pointer[U8] end
     var len = U32(0)
-    ifdef "openssl_1.1.x" or "openssl3" then
+    ifdef "openssl_1.1.x" or "openssl_3" then
       @SSL_get0_alpn_selected(_ssl, addressof ptr, addressof len)
     end
 
@@ -176,7 +176,7 @@ class SSL
       if @BIO_ctrl_pending(_input) > 0 then
         read(expect)
       else
-        ifdef "openssl_1.1.x" or "openssl3" then
+        ifdef "openssl_1.1.x" or "openssl_3" then
           // try and read again any data already decoded from SSL that hasn't
           // been read via `SSL_has_pending` that was added in 1.1
           // This mailing list post has a good description of what it is for:
@@ -257,7 +257,7 @@ class SSL
     ifdef "openssl_1.1.x" then
       return @SSL_get_peer_certificate(_ssl)
     end
-    ifdef "openssl3" then
+    ifdef "openssl_3" then
       return @SSL_get1_peer_certificate(_ssl)
     end
     Pointer[X509].create()
